@@ -10,7 +10,9 @@ const props = defineProps({
 const imgChoosed = ref('')
 const imgChoosedConfig = ref({})
 const imgArr = ref([])
+const div = ref(null)
 const loadingMaxNum = 2
+const observer = null
 
 const loadData = () => {
   if (!imgChoosedConfig.value) return
@@ -19,8 +21,11 @@ const loadData = () => {
     const randomNum = Math.ceil(Math.random() * (maxNum - minNum)) + minNum
     const imgSrc = `../public/${imgPath}/${randomNum}.${type}`
     imgArr.value.push(imgSrc)
+    // observe(div.value.children[imgArr.value.length - 1])
+
   })
   // 加载之后应该排布
+  console.log(div.value.children[0]);
 
 }
 window.addEventListener('resize', () => {
@@ -36,6 +41,21 @@ window.addEventListener('resize', () => {
 //  scroller_view.style.height = `${Math.max(...colHeights) + 10}px`
 const setMasonryHeight = () => console.log('object');
 
+const observe = (cc) => {
+	if (!observer) {
+		observer = new IntersectionObserver((entries) => {
+			if (entries.length === 1 && entries[0].isIntersecting) {
+				// loadData()
+				// observer.unobserve(entries[0].target)
+			}
+		})
+	}
+	observer.observe(div)
+}
+
+
+
+
 
 
 watchEffect(
@@ -45,24 +65,21 @@ watchEffect(
     imgChoosed.value = props.imgChoosed
     imgChoosedConfig.value = image.filter(i => i.optionName == imgChoosed.value)[0]
     setTimeout(loadData)
+
   }
 )
 
 </script>
 
 <template>
-  <div id="img_container">
+  <div id="img_container" ref="div">
     <template v-for="img in imgArr">
-      <div class="card">
+      <div class="card" >
         <img :src="img" alt="" class="show">
         <span>{{imgArr.indexOf(img)}}</span>
       </div>
     </template>
   </div>
-
-  <button @click="loadData" style="position: fixed; top: 30vh;left: 30vw;z-index: 1;">
-    123
-  </button>
 </template>
 
 <style>
