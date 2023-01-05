@@ -4,12 +4,14 @@ import Header from './components/Header.vue';
 import ToTop from './components/ToTop.vue';
 import ImageContainer from './components/ImageContainer.vue';
 import image from '../public/image.json';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 
 const imgRef = ref('')
 
 const imageInfo = e => imgRef.value = e.value
+
+
 
 </script>
 

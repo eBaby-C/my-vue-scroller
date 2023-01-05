@@ -10,17 +10,33 @@ const props = defineProps({
 const imgChoosed = ref('')
 const imgChoosedConfig = ref({})
 const imgArr = ref([])
-const loadingMaxNum = 5
+const loadingMaxNum = 2
 
 const loadData = () => {
   if (!imgChoosedConfig.value) return
   const { maxNum, minNum, type, imgPath } = imgChoosedConfig.value
-  Array.from({length: loadingMaxNum}, () => {
+  Array.from({ length: loadingMaxNum }, () => {
     const randomNum = Math.ceil(Math.random() * (maxNum - minNum)) + minNum
     const imgSrc = `../public/${imgPath}/${randomNum}.${type}`
     imgArr.value.push(imgSrc)
   })
+  // 加载之后应该排布
+
 }
+window.addEventListener('resize', () => {
+  // colHeights = [500, 500, 500]
+  // document.querySelectorAll('.card').forEach((card, index) => {
+  // 	const cardHeight = card.clientHeight
+  // 	const colIndex = (index + 1) % 3
+  // 	colHeights[colIndex] += cardHeight
+  // })
+  setMasonryHeight()
+})
+
+//  scroller_view.style.height = `${Math.max(...colHeights) + 10}px`
+const setMasonryHeight = () => console.log('object');
+
+
 
 watchEffect(
   () => {
@@ -39,6 +55,7 @@ watchEffect(
     <template v-for="img in imgArr">
       <div class="card">
         <img :src="img" alt="" class="show">
+        <span>{{imgArr.indexOf(img)}}</span>
       </div>
     </template>
   </div>
@@ -49,14 +66,13 @@ watchEffect(
 </template>
 
 <style>
-
 :root {
-	--card-width: 30vw;
-	--divider-width: 2vw;
+  --card-width: 30vw;
+  --divider-width: 2vw;
 }
 
 img {
-  max-height: 70vh;
+  width: 100%;
 }
 
 .show {
@@ -67,19 +83,9 @@ img {
 }
 
 .card {
-	width: 30vw;
-	padding-bottom: 30px;
-	position: relative;
-}
-
-.card:nth-of-type(3n + 1) {
-	order: 1;
-}
-.card:nth-of-type(3n + 2) {
-	order: 2;
-}
-.card:nth-of-type(3n + 3) {
-	order: 3;
+  width: 30vw;
+  padding-bottom: 30px;
+  height: 100%;
 }
 
 @keyframes slideIn {
@@ -96,14 +102,13 @@ img {
 
 #img_container {
   padding-top: 60px;
-	width: calc(var(--card-width) * 3 + var(--divider-width) * 2);
-	min-height: 100vh;
-	margin: 0 auto;
+  width: calc(var(--card-width) * 3 + var(--divider-width) * 2);
+  margin: 0 auto;
   display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	align-content: flex-start;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
-
 </style>
 
